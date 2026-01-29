@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<robot name="my_amr" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- Variables and Constants -->
+        <!-- Body dimensions -->
+            <!-- Body Width/Length -->
+            <xacro:property name="c" value="0.5"/>
+            <!-- Body Height -->
+            <xacro:property name="b" value="0.1"/>
+    
+        <!-- Wheel and caster dimensions -->
+            <!-- Wheel radius -->
+                <xacro:property name="r" value="0.05"/>
+            <!-- Wheel width -->
+                <xacro:property name="d" value="0.02"/>
+            <!-- Wheel offset -->
+                <xacro:property name="wheel_offset" value="0.01"/>
+            <!-- Caster radius -->
+                <xacro:property name="r_caster" value="0.02"/>
+
+        <!-- Lidar and roof dimensions -->
+            <!-- Lidar Radius -->
+                <xacro:property name="lidar_radius" value="0.05"/>
+            <!-- Lidar Length -->
+                <xacro:property name="lidar_length" value="0.05"/>
+            <!-- Roof Height-->
+                <xacro:property name="roof_height" value="0.001"/>
+
+        <!-- S Value --> 
+            <xacro:property name="S1" value="${b/2+2*r_caster}"/>
+            <xacro:property name="S2" value="0.2"/>
+            <xacro:property name="S3" value="0.125"/>
+            <xacro:property name="S4" value="${c/2-d/2}"/>
+
+    <!-- Links -->
+        <!-- Base Footprint -->
+            <link name="base_footprint">
+                <!-- Refer to Platform -->
+            </link>
+
+        <!-- Base (Chassis) -->
+            <link name="base_link">
+                <visual>
+                    <geometry>
+                        <box size="${c} ${c} ${b}"/>
+                    </geometry>
+                    <origin xyz="0 0 ${b/2}" rpy="0 0 0"/>
+                    <material name="orange"/>
+                </visual>
+            </link>
+            <joint name="base_footprint_base_joint" type="fixed">
+                <parent link="base_footprint"/>
+                <child link="base_link"/>
+                <origin xyz="0 0 ${2*r_caster}" rpy="0 0 0"/>
+            </joint>
+
+        <!-- Lidar -->
+            <link name="lidar_link">
+                <visual>
+                    <geometry>
+                        <cylinder radius="${lidar_radius}" length="${lidar_length}"/>
+                    </geometry>
+                    <origin xyz="0 0 ${(lidar_length + roof_height)/2}" rpy="0 0 0"/>
+                    <material name="black"/>
+                </visual>
+            </link>
+            <joint name="base_lidar_joint" type="fixed">
+                <parent link="base_link"/>
+                <child link="lidar_link"/>
+                <origin xyz="0 0 ${b}" rpy="0 0 0"/>
+            </joint>
+
+        <!-- Wheels -->
+            <xacro:macro name="wheel_link" params="prefix offset y">
+                <link name="${prefix}_wheel_link">
+                    <visual>
+                        <geometry>
+                            <cylinder radius="${r}" length="${d}"/>
+                        </geometry>
+                        <origin xyz="0 ${offset} 0" rpy="${pi/2.0} 0 0"/>
+                        <material name="grey"/>
+                    </visual>
+                </link>
+                <joint name="base_${prefix}_wheel_joint" type="continuous">
+                    <parent link="base_link"/>
+                    <child link="${prefix}_wheel_link"/>
+                    <origin xyz="0 ${y} ${r - 2*r_caster}" rpy="0 0 0"/>
+                    <axis xyz="0 1 0"/>
+                </joint>
+            </xacro:macro>
+            <xacro:wheel_link prefix="right" offset="${wheel_offset}" y="${-S4}"/>
+            <xacro:wheel_link prefix="left" offset="${-wheel_offset}" y="${S4}"/>
+
+        <!-- Casters -->
+            <xacro:macro name="caster_wheel_link" params="id x y">
+                <link name="caster_wheel_${id}_link">
+                    <visual>
+                        <geometry>
+                            <sphere radius="${r_caster}"/>
+                        </geometry>
+                        <origin xyz="0 0 0" rpy="0 0 0"/>
+                        <material name="black"/>
+                    </visual>
+                </link>
+                <joint name="base_caster_wheel_${id}_joint" type="fixed">
+                    <parent link="base_link"/>
+                    <child link="caster_wheel_${id}_link"/>
+                    <origin xyz="${x} ${y} ${-r_caster}" rpy="0 0 0"/>
+                </joint>
+            </xacro:macro>
+            <xacro:caster_wheel_link id="1" x="${-S2}" y="${S3}"/>
+            <xacro:caster_wheel_link id="2" x="${-S2}" y="${-S3}"/>
+            <xacro:caster_wheel_link id="3" x="${S2}" y="${S3}"/>
+            <xacro:caster_wheel_link id="4" x="${S2}" y="${-S3}"/>
+
+        <!-- Roof (Optional) -->
+            <link name="roof_link">
+                <visual>
+                    <geometry>
+                        <box size="${c} ${c} ${roof_height}"/>
+                    </geometry>
+                    <origin xyz="0 0 ${roof_height/2}" rpy="0 0 0"/>
+                    <material name="blue"/>
+                </visual>
+            </link>
+            <joint name="base_roof_joint" type="fixed">
+                <parent link="base_link"/>
+                <child link="roof_link"/>
+                <origin xyz="0 0 ${b}" rpy="0 0 0"/>
+            </joint>
+
+</robot>

@@ -64,7 +64,7 @@
                     </geometry>
                     <origin xyz="0 0 ${b/2.0}" rpy="0 0 0"/>
                 </collision>
-                <xacro:box_inertia m="${body_mass}" l="${c}" w="${c}" h="${b}"
+                <xacro:box_inertia m="${body_mass}" l="${2*c}" w="${2*c}" h="${2*b}"
                                    xyz="0 0 ${b/2.0}" rpy="0 0 0"/>
             </link>
             <joint name="base_footprint_base_joint" type="fixed">
@@ -72,6 +72,9 @@
                 <child link="base_link"/>
                 <origin xyz="0 0 ${2.0*r_caster}" rpy="0 0 0"/>
             </joint>
+            <gazebo reference="base_link">
+                <material>Gazebo/Orange</material>
+            </gazebo>
 
         <!-- Lidar -->
             <link name="lidar_link">
@@ -88,7 +91,7 @@
                     </geometry>
                     <origin xyz="0 0 ${(lidar_length + roof_height)/2.0}" rpy="0 0 0"/>
                 </collision>
-                <xacro:cylinder_inertia m="${lidar_mass}" r="${lidar_radius}" h="${lidar_length}"
+                <xacro:cylinder_inertia m="${lidar_mass}" r="${2*lidar_radius}" h="${2*lidar_length}"
                                         xyz="0 0 ${(lidar_length + roof_height)/2.0}" rpy="0 0 0"/>
             </link>
             <joint name="base_lidar_joint" type="fixed">
@@ -96,6 +99,9 @@
                 <child link="lidar_link"/>
                 <origin xyz="0 0 ${b}" rpy="0 0 0"/>
             </joint>
+            <gazebo reference="lidar_link">
+                <material>Gazebo/Black</material>
+            </gazebo>
 
         <!-- Wheels -->
             <xacro:macro name="wheel_link" params="prefix offset y">
@@ -113,7 +119,7 @@
                         </geometry>
                         <origin xyz="0 ${offset} 0" rpy="${pi/2.0} 0 0"/>
                     </collision>
-                    <xacro:cylinder_inertia m="${wheel_mass}" r="${r}" h="${d}"
+                    <xacro:cylinder_inertia m="${wheel_mass}" r="${2*r}" h="${2*d}"
                                             xyz="0 ${offset} 0" rpy="${pi/2.0} 0 0"/>
                 </link>
                 <joint name="base_${prefix}_wheel_joint" type="continuous">
@@ -122,6 +128,9 @@
                     <origin xyz="0 ${y} ${r - 2.0*r_caster}" rpy="0 0 0"/>
                     <axis xyz="0 1 0"/>
                 </joint>
+                <gazebo reference="${prefix}_wheel_link">
+                    <material>Gazebo/Grey</material>
+                </gazebo>
             </xacro:macro>
             <xacro:wheel_link prefix="right" offset="${wheel_offset}" y="${-S4}"/>
             <xacro:wheel_link prefix="left" offset="${-wheel_offset}" y="${S4}"/>
@@ -142,7 +151,7 @@
                         </geometry>
                         <origin xyz="0 0 0" rpy="0 0 0"/>
                     </collision>
-                    <xacro:sphere_inertia m="${caster_mass}" r="${r_caster}" 
+                    <xacro:sphere_inertia m="${caster_mass}" r="${2*r_caster}" 
                                           xyz="0 0 0" rpy="0 0 0"/>
                 </link>
                 <joint name="base_caster_wheel_${id}_joint" type="fixed">
@@ -150,6 +159,9 @@
                     <child link="caster_wheel_${id}_link"/>
                     <origin xyz="${x} ${y} ${-r_caster}" rpy="0 0 0"/>
                 </joint>
+                <gazebo reference="caster_wheel_${id}_link">
+                    <material>Gazebo/Black</material>
+                </gazebo>
             </xacro:macro>
             <xacro:caster_wheel_link id="1" x="${-S2}" y="${S3}"/>
             <xacro:caster_wheel_link id="2" x="${-S2}" y="${-S3}"/>
@@ -171,7 +183,7 @@
                     </geometry>
                     <origin xyz="0 0 ${roof_height/2.0}" rpy="0 0 0"/>
                 </collision>
-                <xacro:box_inertia m="${roof_mass}" l="${c}" w="${c}" h="${roof_height}"
+                <xacro:box_inertia m="${roof_mass}" l="${2*c}" w="${2*c}" h="${2*roof_height}"
                                    xyz="0 0 ${roof_height/2.0}" rpy="0 0 0"/>
             </link>
             <joint name="base_roof_joint" type="fixed">
@@ -179,5 +191,8 @@
                 <child link="roof_link"/>
                 <origin xyz="0 0 ${b}" rpy="0 0 0"/>
             </joint>
+            <gazebo reference="roof_link">
+                <material>Gazebo/Blue</material>
+            </gazebo>
 
 </robot>

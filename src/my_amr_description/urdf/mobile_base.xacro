@@ -64,7 +64,7 @@
                     </geometry>
                     <origin xyz="0 0 ${S1}" rpy="0 0 0"/>
                 </collision>
-                <xacro:box_inertia m="${body_mass}" l="${c}" w="${c}" h="${b}"
+                <xacro:box_inertia m="${body_mass}" l="${b}" w="${c}" h="${c}"
                                    xyz="0 0 ${S1}" rpy="0 0 0"/>
             </link>
             <joint name="base_footprint_base_joint" type="fixed">
@@ -161,8 +161,8 @@
                 </joint>
                 <gazebo reference="caster_wheel_${id}_link">
                     <material>Gazebo/Black</material>
-                    <mu1 value="0.1"/>
-                    <mu2 value="0.1"/>
+                    <mu1 value="0.001"/>
+                    <mu2 value="0.001"/>
                 </gazebo>
             </xacro:macro>
             <xacro:caster_wheel_link id="1" x="${-S2}" y="${S3}"/>
@@ -185,7 +185,7 @@
                     </geometry>
                     <origin xyz="0 0 ${roof_height/2.0}" rpy="0 0 0"/>
                 </collision>
-                <xacro:box_inertia m="${roof_mass}" l="${c}" w="${c}" h="${roof_height}"
+                <xacro:box_inertia m="${roof_mass}" l="${roof_height}" w="${c}" h="${c}"
                                    xyz="0 0 ${roof_height/2.0}" rpy="0 0 0"/>
             </link>
             <joint name="base_roof_joint" type="fixed">

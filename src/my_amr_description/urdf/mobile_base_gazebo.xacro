@@ -2,15 +2,18 @@
 <robot name="my_amr" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <gazebo>
-        <plugin name="diff_drive_controller" filename="libgazebo_ros_diff_drive.so">
+        <plugin name="diff_drive" filename="libgazebo_ros_diff_drive.so">
             <!-- Update rate in Hz -->
             <update_rate>50</update_rate>
             <!-- Wheels -->
             <right_joint>base_right_wheel_joint</right_joint>
             <left_joint>base_left_wheel_joint</left_joint>
             <!-- Kinematics -->
-            <wheel_separation>0.48</wheel_separation>
-            <wheel_diameter>0.1</wheel_diameter>
+            <wheel_separation>${S4*2}</wheel_separation>
+            <wheel_diameter>${r*2}</wheel_diameter>
+            <!-- Limits -->
+            <max_wheel_torque>200</max_wheel_torque>
+            <max_wheel_acceleration>10.0</max_wheel_acceleration>
             <!-- Inputs -->
             <command_topic>cmd_vel</command_topic>
             <!-- Outputs -->
